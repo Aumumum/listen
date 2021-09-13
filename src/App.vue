@@ -1,7 +1,8 @@
 <template>
   <el-container>
-    <NavMenu :isCollapse='isCollapse' :isMobile="isMobile"/>
-    <router-view></router-view>
+    <NavMenu/>
+    <router-view class="main"></router-view>
+    
     <Player />
   </el-container>
 </template>
@@ -19,17 +20,15 @@ export default {
   data() {
     return {
       screenWidth: document.body.clientWidth,
-      isCollapse: true,
-      isMobile: false,
     };
   },
 
   watch: {
     screenWidth: {
       handler(newVal) {
-        this.isCollapse = newVal > 1200 ? false : true;
-        this.isMobile = newVal > 540 ? false : true;
-        console.log( this.isMobile)
+        this.$store.state.isCollapse = newVal > 1200 ? false : true;
+        this.$store.state.isMobile = newVal > 540 ? false : true;
+
       },
       immediate: true,
     },
@@ -68,5 +67,9 @@ body {
 }
 .el-container {
   height: 100vh;
+  overflow-x: hidden;
+}
+.main{
+ padding-bottom: 55px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header v-show="!this.$store.state.isMobile">
       <TopBar />
     </el-header>
     <el-main>
@@ -25,11 +25,10 @@ export default {
 <style scoped>
 .el-main {
   height: 100%;
- margin-bottom: 50px;
-}
-h3 {
-  display: inline-block;
-  color: #5a7099;
-  padding-left: 7.5px;
+  width: 100%;
+  overflow-x: hidden;
+  
+
+  
 }
 </style>

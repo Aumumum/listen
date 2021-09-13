@@ -1,11 +1,11 @@
 <template>
-  <el-aside v-show="!isMobile" width="auto">
+  <el-aside v-show="!this.$store.state.isMobile" width="auto">
     <transition
       enter-class="animate__animated animate__fadeIn animate__delay-11s"
       leave-active-class="animate__animated animate__zoomOutLeft"
     >
-      <el-menu  router active-text-color='#ffb199' :default-active="this.$route.path" :collapse="isCollapse">
-        <p><i v-show="!isCollapse" class="el-icon-user-solid user" /></p>
+      <el-menu  router active-text-color='#ffb199' :default-active="this.$route.path" :collapse="this.$store.state.isCollapse">
+        <p><i v-show="!this.$store.state.isCollapse" class="el-icon-user-solid user" /></p>
         <el-menu-item v-for="item in items" :key="item.icon" :index="item.path">
           <i :class="item.icon"></i>
           <span slot="title">{{ item.title }}</span>
@@ -22,9 +22,9 @@ props:['isCollapse','isMobile'],
 
   computed:{
    items(){return [
-        { dpath: this.$store.state.routeAbout.path, title: "发现音乐", icon: "el-icon-discover" },
-        { dpath: "/fm", title: "私人FM", icon: "el-icon-headset" },
-        { dpath: "/mv", title: "MV", icon: "el-icon-video-camera" },
+        { path: this.$store.state.routeAbout.path, title: "发现音乐", icon: "el-icon-discover" },
+        { path: "/fm", title: "私人FM", icon: "el-icon-headset" },
+        { path: "/mv", title: "MV", icon: "el-icon-video-camera" },
       ]},
 
   },

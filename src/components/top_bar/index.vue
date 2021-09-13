@@ -1,10 +1,10 @@
 <template>
-    <el-row type="flex"  justify="end">
-      <el-col :span="16">
+    <el-row v-show="!this.$store.state.isMobile" type="flex"  justify="end">
+      <el-col :span="19">
         <Tages/>
       </el-col>
-      <el-col :span="8" >
-        <Search/>
+      <el-col  :span="5" >
+        <Search v-show="!this.$store.state.isCollapse"/>
         </el-col>
     </el-row>
 </template>
@@ -23,7 +23,6 @@ export default {
 <style>
 .el-header {
   width: 100%;
-  min-width: 900px;
 }
 
 </style>

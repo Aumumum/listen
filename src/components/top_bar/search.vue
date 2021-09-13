@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style spoed>
-.el-autocomplete {
+.el-autocomplete {  
   line-height: 62px;
 }
 input[type="text"] {

@@ -4,6 +4,7 @@
     stripe
     lazy
     height="100%"
+    width="100%"
     highlight-current-row
     :row-class-name="tableRowClassName"
     :data="tbData"
@@ -32,7 +33,7 @@ export default {
   data() {
     return {
       tbData: [],
-      tbCols: [
+      title: [
         {
           name: "serial",
           label: "",
@@ -64,10 +65,15 @@ export default {
           width: 80,
         },
       ],
+      disTitle: [],
     };
   },
+  watch() {},
   computed: {
     ...mapState("playerAbout", ["isPlaying", "playingIndex"]),
+    tbCols() {
+      return this.title;
+    },
   },
   methods: {
     ...mapActions("playerAbout", ["pushSong"]),
@@ -123,8 +129,7 @@ export default {
           showClose: false,
         });
         this.changePlayingIndex(this.playingIndex + 1);
-      }
-    else  if (this.$store.state.playerAbout.playList.includes(obj))
+      } else if (this.$store.state.playerAbout.playList.includes(obj))
         this.$message.warning({
           message: "添加列表成功，下一首播放",
           showClose: false,
@@ -141,6 +146,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

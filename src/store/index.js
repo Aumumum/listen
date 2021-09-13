@@ -20,7 +20,7 @@ const playerAbout = {
   namespaced: true,
   state: () => ({
     playingIndex:0,
-    isPlaying:true,
+    isPlaying:false,
     playList: [
        {
          id: 1409382131,
@@ -49,9 +49,13 @@ const playerAbout = {
     },
   },
 };
+
 export default new Vuex.Store({
   modules: {
     routeAbout,
     playerAbout,
   },
+  state:{
+    isCollapse: false,
+    isMobile: false,},
 });

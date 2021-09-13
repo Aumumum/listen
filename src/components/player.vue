@@ -5,7 +5,7 @@
     type="flex"
     justify="space-around"
     align="middle"
-    :gutter="90"
+    :gutter="20"
   >
     <audio ref="audio" autoplay>
       <source :src="url" type="audio/mp3" />
@@ -18,18 +18,21 @@
       @change="changeProgress"
     ></el-slider>
     <el-col :span="4">
-      <div class="cover">
+     <div class="cover">
         <div class="image">
-        <img :src="picUrl" />
+          <img :src="picUrl" />
         </div>
         <span> {{ playList[playingIndex].title }}</span>
         <span class="small">
           {{ playList[playingIndex].singer }}
         </span>
-      </div>
+        
+        <div class="contorl simplify "  v-show=" this.$store.state.isCollapse">
+          <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
+         </div></div>
     </el-col>
-    <el-col :span="14">
-      <div class="contorl">
+    <el-col :span="14" >
+      <div class="contorl"  v-show="! this.$store.state.isCollapse">
         <div class="animate__animated animate__flipInX">
           <el-popover
             placement="top-start"
@@ -44,7 +47,7 @@
               style="width: 100%"
               height="350px"
               :show-header="false"
-              @row-dblclick="rowDblclick"
+              @row-click="rowDblclick"
             >
               <el-table-column width="220">
                 <template slot-scope="scope">
@@ -78,10 +81,8 @@
             title="上一首"
             @click="changePlayingIndex(playingIndex - 1)"
           ></i>
-          <i
-            :class="playBtn"
-            @click="isPlaying = !isPlaying"
-          ></i>
+          <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
+
           <i
             class="el-icon-caret-right"
             title="下一首"
@@ -95,10 +96,11 @@
           ></i>
           <i class="mid el-icon-star-off"></i>
         </div>
+        
       </div>
     </el-col>
     <el-col :span="4">
-      <div class="setting">
+      <div class="setting"  v-show="! this.$store.state.isCollapse">
         <el-slider v-model="volume" :stroke-width="26"></el-slider>
       </div>
     </el-col>
@@ -112,11 +114,11 @@ export default {
   name: "player",
   data() {
     return {
-      playBtn:'el-icon-video-play',
+      playBtn: "",
       url: "",
       picUrl: "",
       audio: null,
-      volume: 50,
+      volume: 20,
       progress: 0,
       currentTime: 0,
       duration: 0,
@@ -136,18 +138,20 @@ export default {
     volume(newVal) {
       this.audio.volume = newVal / 100;
     },
-    isPlaying:{
+    isPlaying: {
       handler(newVal) {
-      this.$nextTick(() => {
-        if (newVal) {
-          this.playBtn='el-icon-video-pause'
-          this.audio.play();
-        } else{ 
-           this.playBtn='el-icon-video-play'
-          this.audio.pause();
-        
-        }
-      });},
+        this.$nextTick(() => {
+          if (newVal) {
+            this.playBtn = "el-icon-video-pause";
+            this.audio.play();
+            console.log(2);
+          } else {
+            this.playBtn = "el-icon-video-play";
+            this.audio.pause();
+          }
+        });
+      },
+      immediate: true,
     },
     playingIndex: {
       handler(newVal) {
@@ -262,6 +266,10 @@ export default {
 .player /deep/ .el-slider__button-wrapper {
   top: -16px;
 }
+.el_col{
+  
+  margin: 0 30px;
+}
 .small {
   font-size: 12px;
   color: #cd7272;
@@ -289,6 +297,7 @@ i:hover {
   width: 100%;
 }
 .cover {
+  position: relative;
   height: 50px;
   width: 100%;
   min-width: 200px;
@@ -304,8 +313,8 @@ i:hover {
   height: 50px;
   border-radius: 5px;
 }
-.image img{
-  border-radius:inherit;
+.image img {
+  border-radius: inherit;
 }
 .cover span {
   position: relative;
@@ -322,8 +331,14 @@ i:hover {
 }
 .contorl {
   text-align: center;
-
   font-size: 50px;
+}
+.simplify{
+position: absolute;
+top: 0;
+left:calc(82vw);
+ width: 50px;
+ height: 50px;
 }
 i {
   cursor: pointer;

@@ -2,7 +2,7 @@
   <div>
     <el-row
       v-if="isFull"
-      class="ad animate__animated animate__bounceInDown"
+      class="ad animate__animated animate__bounceInDown animate__delay-.7s"
       :style="{ backgroundImage: 'url(' + highquality.coverImgUrl + ')' }"
     >
       <el-col :span="4">
@@ -31,16 +31,19 @@
       {{ songList.title }}
     </h3>
     <el-row :gutter="15">
-      <el-col v-for="item in songList.list" :key="item.id" :span="4">
+      <el-col   v-for="item in songList.list" :key="item.id" :span="4">
         <el-card
-          class="animate__animated animate__flipInX"
+          class="duck animate__animated animate__flipInX"
           shadow="hover"
           :body-style="{ padding: '0px' }"
+          :title="item.name"
         >
-          <img @click="goPlay(item.id)" :src="item.picUrl" lazy alt="歌单封面" />
-          <div class="dog">
-            <span @click="goPlay(item.id)">{{ item.name }}</span>
-          </div>
+          <img  @click="goPlay(item.id)" :src="item.picUrl" lazy alt="歌单封面" />
+          <div   class="dog" 
+         >
+            
+            <span >{{ item.name }}</span>
+         </div>
         </el-card>
       </el-col>
     </el-row>
@@ -93,8 +96,8 @@ export default {
   },
   watch: {
     "songList.title": {
-      async handler() {
-        await this.loadALl();
+       handler() {
+         this.loadALl();
       },
       immediate: true,
     },
@@ -102,7 +105,7 @@ export default {
       handler() {
         this.listChange();
       },
-    },
+    },immediate: true,
   },
   methods: {
     handel(index, name) {
@@ -130,7 +133,7 @@ export default {
     },
     listChange() {
       getList({
-        limit: this.isFull ? this.songList.limit : 12,
+        limit: this.isFull ? this.songList.limit :6,
         offset: this.offset,
         cat: this.cat,
       }).then((response) => {
@@ -144,8 +147,8 @@ export default {
         });
       });
     },
-    async goPlay(id) {
-    await  getSongs({ id }).then((response) => {
+    goPlay(id) {
+      getSongs({ id }).then((response) => {
       console.log(response.data.playlist.id)
         this.$store.state.trackIds = response.data.playlist.trackIds;
         this.$router.push({
@@ -159,7 +162,8 @@ export default {
     },
   },
   beforeMount() {
-    this.listChange()
+    this.$nextTick(()=>{this.listChange();})
+     
     getTags().then((response) => {
       this.tags = response.data.tags.slice(0, 9);
     });
@@ -190,18 +194,48 @@ export default {
   cursor: pointer;
 }
 .tag {
+  
+   margin-left: 85px;
+   height: 30px;
+   line-height: 30px;
+   overflow: hidden;
   position: absolute;
   color: #424242ab;
   font-size: 8px;
-  
   right: 20px;
-  bottom: -35px;
+  bottom: -43px;
+}
+.duck{
+  box-sizing: border-box;
+}
+.duck::before{
+  width: 100%;
+  height: 100%;
+  position:absolute;
+   content:          "play";
+   line-height: 180px;
+   font-weight: 800;
+   border: 2px solid transparent;
+   color: snow;
+   text-align: center;
+   background-color: rgba(0, 0, 0, 0.1);
+   backdrop-filter: blur(1px) Saturate(1080%);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+.duck:hover::before {
+  opacity: 1;
+  pointer-events: none;
 }
 .active {
   text-orientation: right;
   font-size: 12px;
   background: #dfd9b7;
   color: #d3b301;
+}
+h3{
+  display: inline-block;
 }
 .item {
   margin-right: 10px;
@@ -210,18 +244,24 @@ export default {
   cursor: pointer;
 }
 .el-col {
-  margin-bottom: 20px;
+margin-bottom: 20px;
 }
-
+.duck{
+   width: calc(100vw * 0.122);
+ height: calc(100vw * 0.122+40px);
+}
 img {
+  height: calc(100vw * 0.122);
   cursor: pointer;
-  width: 196px;
-  min-height: 196px;
 }
 .dog {
-  cursor: pointer;
-  overflow: visible;
   padding: 9px;
-  height: 35px;
+  height: 30px;
+
+white-space: nowrap;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+-ms-text-overflow: ellipsis;
 }
 </style>

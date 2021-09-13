@@ -13,10 +13,9 @@ import Empty from '../pages/notFound'
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  mode:'history',
   routes: [
     {
-      path: ".",
+      path: "",
       component: Home,
        children: [
         {
@@ -42,15 +41,15 @@ export default new VueRouter({
       ], 
     },
     {
-      path: "./fm",
+      path: "/fm",
       component:Fm,
     },
     {
-      path: "./mv",
+      path: "/mv",
       component:Mv,
     },
     {
-      path:'./*',
+      path:'/*',
       component:Empty,
     }
   ],
