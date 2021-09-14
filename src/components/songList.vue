@@ -39,11 +39,7 @@
           :title="item.name"
         >
           <img  @click="goPlay(item.id)" :src="item.picUrl" lazy alt="歌单封面" />
-          <div   class="dog" 
-         >
-            
-            <span >{{ item.name }}</span>
-         </div>
+          
         </el-card>
       </el-col>
     </el-row>
@@ -149,7 +145,6 @@ export default {
     },
     goPlay(id) {
       getSongs({ id }).then((response) => {
-      console.log(response.data.playlist.id)
         this.$store.state.trackIds = response.data.playlist.trackIds;
         this.$router.push({
           path: "/newest",
@@ -248,20 +243,10 @@ margin-bottom: 20px;
 }
 .duck{
    width: calc(100vw * 0.122);
- height: calc(100vw * 0.122+40px);
+ height: calc(100vw * 0.122);
 }
 img {
   height: calc(100vw * 0.122);
   cursor: pointer;
-}
-.dog {
-  padding: 9px;
-  height: 30px;
-
-white-space: nowrap;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
--ms-text-overflow: ellipsis;
 }
 </style>

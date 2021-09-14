@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div class="block  ">
-      <el-carousel :interval="5000" :height="imgHeight">
+      <el-carousel indicator-position='none' :interval="5000" :height="imgHeight">
         <el-carousel-item
           class="animate__animated  animate__fadeIn"
           v-for="pic in imageUrl"
@@ -11,8 +9,6 @@
           <img  v-show="true" :src="pic" alt="" />
         </el-carousel-item>
       </el-carousel>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -52,7 +48,7 @@ export default {
         var arr = response.data.banners;
         this.imageUrl = arr.map((item) => {
           return item.imageUrl;
-        }).slice(0,5);
+        })
       });
     },
   },

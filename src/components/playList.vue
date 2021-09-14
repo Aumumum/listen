@@ -2,9 +2,7 @@
   <el-table
     append
     stripe
-    lazy
     height="100%"
-    width="100%"
     highlight-current-row
     :row-class-name="tableRowClassName"
     :data="tbData"
@@ -12,7 +10,7 @@
     @row-dblclick="handleRow"
   >
     <el-table-column
-      v-for="item in tbCols"
+      v-for="item in disTitle"
       :key="item.name"
       :prop="item.name"
       :label="item.label"
@@ -68,11 +66,20 @@ export default {
       disTitle: [],
     };
   },
-  watch() {},
+  watch: {
+    isMobile: {
+      handler(newVal) {
+        if (newVal) this.disTitle = this.title.slice(0, 2);
+        else this.disTitle = this.title;
+      },
+      immediate: true,
+    },
+  },
   computed: {
     ...mapState("playerAbout", ["isPlaying", "playingIndex"]),
-    tbCols() {
-      return this.title;
+
+    isMobile() {
+      return this.$store.state.isMobile;
     },
   },
   methods: {

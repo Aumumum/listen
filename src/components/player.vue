@@ -29,7 +29,8 @@
         
         <div class="contorl simplify "  v-show=" this.$store.state.isCollapse">
           <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
-         </div></div>
+          </div>
+     </div>
     </el-col>
     <el-col :span="14" >
       <div class="contorl"  v-show="! this.$store.state.isCollapse">
@@ -144,7 +145,6 @@ export default {
           if (newVal) {
             this.playBtn = "el-icon-video-pause";
             this.audio.play();
-            console.log(2);
           } else {
             this.playBtn = "el-icon-video-play";
             this.audio.pause();
@@ -155,6 +155,7 @@ export default {
     },
     playingIndex: {
       handler(newVal) {
+        
         if (newVal === this.playList.length) this.changePlayingIndex(0);
         else if (newVal < 0) this.changePlayingIndex(this.playList.length - 1);
         if (this.playList.length) {
@@ -219,7 +220,6 @@ export default {
 
       this.audio.addEventListener("ended", () => {
         this.changePlayingIndex(this.playingIndex + 1);
-        console.log("fangwanle");
       });
     },
   },
@@ -336,9 +336,7 @@ i:hover {
 .simplify{
 position: absolute;
 top: 0;
-left:calc(82vw);
- width: 50px;
- height: 50px;
+left:calc(80vw);
 }
 i {
   cursor: pointer;

@@ -26,7 +26,6 @@ export default {
         if (newVal)
           getTyping({ keywords: newVal }).then((response) => {
             let arr = response.data.result.songs;
-            console.log(response.data);
             this.typeSuggest = arr.map((item) => {
               return Object.assign({
                 id: item.id,
