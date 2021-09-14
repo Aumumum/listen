@@ -23,13 +23,7 @@ const playerAbout = {
     isPlaying:false,
     playList: [
        {
-         id: 1409382131,
-        title: "摩天动物园",
-        singer: "G.E.M.邓紫棋",
-        duration: 270676,
-        picUrl: "https://p1.music.126.net/KTo5oSxH3CPA5PBTeFKDyA==/109951164581432409.jpg?param=224y224", 
-        url:"https://music.163.com/song/media/outer/url?id=1409382131"
-      }, 
+          }, 
     ],
   }),
   mutations: {

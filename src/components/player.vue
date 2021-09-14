@@ -1,6 +1,6 @@
 <template>
   <el-row
-    v-show="this.playList.length"
+    v-show="this.$route.path!=='/mv'"
     class="player"
     type="flex"
     justify="space-around"
@@ -27,13 +27,13 @@
           {{ playList[playingIndex].singer }}
         </span>
         
-        <div class="contorl simplify "  v-show=" this.$store.state.isCollapse">
+        <div class="contorl simplify "  v-show=" this.$store.state.isMobile">
           <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
           </div>
      </div>
     </el-col>
     <el-col :span="14" >
-      <div class="contorl"  v-show="! this.$store.state.isCollapse">
+      <div class="contorl"  v-show="! this.$store.state.isMobile">
         <div class="animate__animated animate__flipInX">
           <el-popover
             placement="top-start"
@@ -43,8 +43,7 @@
             title="正在播放"
           >
             <el-table
-              v-show="playList[0]"
-              :data="playList"
+              :data="playList.slice(1)"
               style="width: 100%"
               height="350px"
               :show-header="false"
@@ -80,14 +79,14 @@
           <i
             class="el-icon-caret-left"
             title="上一首"
-            @click="changePlayingIndex(playingIndex - 1)"
+            @click="goBack(-1)"
           ></i>
-          <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
+          <i :class="playBtn" @click="playState"></i>
 
           <i
             class="el-icon-caret-right"
             title="下一首"
-            @click="changePlayingIndex(playingIndex + 1)"
+            @click="goBack(1)"
           ></i>
           <span class="small duration">{{ durationTimeForm }}</span>
           <i
@@ -115,8 +114,8 @@ export default {
   name: "player",
   data() {
     return {
-      playBtn: "",
-      url: "",
+      playBtn: "el-icon-video-play",
+      url:'',
       picUrl: "",
       audio: null,
       volume: 20,
@@ -155,20 +154,27 @@ export default {
     },
     playingIndex: {
       handler(newVal) {
-        
-        if (newVal === this.playList.length) this.changePlayingIndex(0);
-        else if (newVal < 0) this.changePlayingIndex(this.playList.length - 1);
-        if (this.playList.length) {
-          this.url = this.playList[newVal].url;
-          this.picUrl = this.playList[newVal].picUrl;
+        if (newVal === this.playList.length){ this.changePlayingIndex(1)
+         return}
+        else if (newVal < 1){ this.changePlayingIndex(this.playList.length - 1)
+        return
         }
-        this.$nextTick(() => {
+       
+        
+this.url = this.playList[newVal].url;
+          this.picUrl = this.playList[newVal].picUrl;
+this.$nextTick(() => {
+
+            
           this.isPlaying = true;
           this.audio.load();
           this.audio.play();
-        });
+        })
+          
+        
+        
+        
       },
-      immediate: true,
     },
   },
 
@@ -182,6 +188,8 @@ export default {
         this.$store.state.playerAbout.isPlaying = val;
       },
     },
+    
+      
   },
 
   methods: {
@@ -196,7 +204,17 @@ export default {
     changeProgress(val) {
       this.setCurrentTime = (val / 100) * this.duration;
     },
-    handleDelete(row) {
+    playState(){
+      if(this.playList.length>1)
+     this. isPlaying = !this.isPlaying
+    },
+    goBack(val){
+      if(this.playList.length===1)
+      {return}
+      else
+     this. changePlayingIndex(this.playingIndex +val)
+    }, 
+       handleDelete(row) {
       this.playList.splice(row, 1);
       if (this.playingIndex > row)
         this.changePlayingIndex(this.playingIndex - 1);

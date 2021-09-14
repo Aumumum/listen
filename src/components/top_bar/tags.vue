@@ -13,8 +13,6 @@ data(){
         tags: [ 
             {path:"/",title:"个性推荐"},
             {path:"/list",title:"歌单"},
-            {path:"/rank",title:"排行榜"},
-            {path:"/singer",title:"歌手"},
             {path:"/newest",title:"最新音乐"}
             ],
     }
