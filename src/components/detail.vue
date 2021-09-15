@@ -100,6 +100,8 @@ getSongDetail({ids:ids.toString()}).then(response=>{
             formTime: this.timeFormt(item.dt),
             id: item.id,
             picUrl: item.al.picUrl, 
+
+          url: "https://music.163.com/song/media/outer/url?id=" + item.id,
         }); 
         
        })
