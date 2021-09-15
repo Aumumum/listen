@@ -11,7 +11,9 @@ export const getTags = () => get("/playlist/highquality/tags");
 export const getHighquality = (params) =>
   get("/top/playlist/highquality", params);
 export const getList = (params) => get("/top/playlist", params);
-export const getSongs = (params) => get("/playlist/detail", params);
+export const getPlaylistDetail = (params) => get("/playlist/detail", params);
+
+export const getSongDetail = (params) => get("/song/detail", params);
 //歌组件
 export const getAlbum = () => get("/top/song?type=7");
 export const checkAlbum = (params) => get("/check/music",params);

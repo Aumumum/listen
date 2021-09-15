@@ -1,14 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import  Home from "../pages/music/home";
-import Discovery from '../pages/music/discovery';
+import Home from "../pages/music/home";
+import Discovery from "../pages/music/discovery";
 import List from "../pages/music/list";
-import Rank from "../pages/music/rank";
-import Singer from "../pages/music/singer";
-import Newest from "../pages/music/newest"; 
-import Fm from '../pages/fm';
-import Mv from '../pages/mv';
-import Empty from '../pages/notFound'
+import SongList from '../components/songList'
+import Detail from '../components/detail'
+import Newest from "../pages/music/newest";
+import Fm from "../pages/fm";
+import Mv from "../pages/mv";
+import Empty from "../pages/notFound";
 
 Vue.use(VueRouter);
 
@@ -17,7 +17,7 @@ export default new VueRouter({
     {
       path: "",
       component: Home,
-       children: [
+      children: [
         {
           path: "/",
           component: Discovery,
@@ -25,32 +25,34 @@ export default new VueRouter({
         {
           path: "/list",
           component: List,
+          children:[
+            {
+              path:"",
+              component:SongList,props:{isFull:true}
+            },
+            {
+              path:"detail",component:Detail,props: route => ({ id: route.query.id })
+            },
+          ]
         },
-        {
-          path: "/Rank",
-          component: Rank,
-        },
-        {
-          path: "/Singer",
-          component: Singer,
-        },
+
         {
           path: "/newest",
           component: Newest,
         },
-      ], 
+      ],
     },
     {
       path: "/fm",
-      component:Fm,
+      component: Fm,
     },
     {
       path: "/mv",
-      component:Mv,
+      component: Mv,
     },
     {
-      path:'/*',
-      component:Empty,
-    }
+      path: "/*",
+      component: Empty,
+    },
   ],
 });

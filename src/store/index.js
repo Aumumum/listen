@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 //import {nanoid} from 'nanoid'
 Vue.use(Vuex);
-
+import { nanoid } from "nanoid";
 const routeAbout = {
   namespaced: true,
   state: () => ({
@@ -30,6 +30,11 @@ const playerAbout = {
     pushSong(state, obj) {
       state.playList.splice(state.playingIndex+1,0,obj);
     },
+    pushAll(state, obj) {
+      state.playList.splice(1,state.playList.length-1,...obj);
+      state.playingIndex=1
+      console.log( state.playList.length)
+    },
     changePlayingIndex(state,val){
       state.playingIndex=val
     }
@@ -51,5 +56,6 @@ export default new Vuex.Store({
   },
   state:{
     isCollapse: false,
-    isMobile: false,},
+    isMobile: false,
+    nanoid:nanoid()},
 });

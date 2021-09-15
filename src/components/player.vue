@@ -1,6 +1,6 @@
 <template>
   <el-row
-    v-show="this.$route.path!=='/mv'"
+    v-show="this.$route.path !== '/mv'"
     class="player"
     type="flex"
     justify="space-around"
@@ -18,7 +18,7 @@
       @change="changeProgress"
     ></el-slider>
     <el-col :span="4">
-     <div class="cover">
+      <div class="cover">
         <div class="image">
           <img :src="picUrl" />
         </div>
@@ -26,14 +26,14 @@
         <span class="small">
           {{ playList[playingIndex].singer }}
         </span>
-        
-        <div class="contorl simplify "  v-show=" this.$store.state.isMobile">
+
+        <div class="contorl simplify " v-show="this.$store.state.isMobile">
           <i :class="playBtn" @click="isPlaying = !isPlaying"></i>
-          </div>
-     </div>
+        </div>
+      </div>
     </el-col>
-    <el-col :span="14" >
-      <div class="contorl"  v-show="! this.$store.state.isMobile">
+    <el-col :span="14">
+      <div class="contorl" v-show="!this.$store.state.isMobile">
         <div class="animate__animated animate__flipInX">
           <el-popover
             placement="top-start"
@@ -76,18 +76,10 @@
             @click="setCurrentTime = currentTime - 2"
           ></i>
           <span class="small duration">{{ currentTimeForm }}</span>
-          <i
-            class="el-icon-caret-left"
-            title="上一首"
-            @click="goBack(-1)"
-          ></i>
+          <i class="el-icon-caret-left" title="上一首" @click="goBack(-1)"></i>
           <i :class="playBtn" @click="playState"></i>
 
-          <i
-            class="el-icon-caret-right"
-            title="下一首"
-            @click="goBack(1)"
-          ></i>
+          <i class="el-icon-caret-right" title="下一首" @click="goBack(1)"></i>
           <span class="small duration">{{ durationTimeForm }}</span>
           <i
             class="mid el-icon-d-arrow-right"
@@ -96,11 +88,10 @@
           ></i>
           <i class="mid el-icon-star-off"></i>
         </div>
-        
       </div>
     </el-col>
     <el-col :span="4">
-      <div class="setting"  v-show="! this.$store.state.isCollapse">
+      <div class="setting" v-show="!this.$store.state.isCollapse">
         <el-slider v-model="volume" :stroke-width="26"></el-slider>
       </div>
     </el-col>
@@ -115,7 +106,7 @@ export default {
   data() {
     return {
       playBtn: "el-icon-video-play",
-      url:'',
+      url: "",
       picUrl: "",
       audio: null,
       volume: 20,
@@ -138,11 +129,31 @@ export default {
     volume(newVal) {
       this.audio.volume = newVal / 100;
     },
+    
+    playingIndex: {
+      handler(newVal) {
+        if (newVal === this.playList.length) {
+          this.changePlayingIndex(1);
+          return;
+        } else if (newVal < 1) {
+          this.changePlayingIndex(this.playList.length - 1);
+          return;
+        }
+        this.isPlaying = false;
+        this.url = this.playList[newVal].url;
+        this.picUrl = this.playList[newVal].picUrl;
+        this.$nextTick(() => {
+          this.isPlaying = true;
+        });
+      },
+    },
     isPlaying: {
       handler(newVal) {
         this.$nextTick(() => {
           if (newVal) {
             this.playBtn = "el-icon-video-pause";
+            
+          this.audio.load();
             this.audio.play();
           } else {
             this.playBtn = "el-icon-video-play";
@@ -151,30 +162,6 @@ export default {
         });
       },
       immediate: true,
-    },
-    playingIndex: {
-      handler(newVal) {
-        if (newVal === this.playList.length){ this.changePlayingIndex(1)
-         return}
-        else if (newVal < 1){ this.changePlayingIndex(this.playList.length - 1)
-        return
-        }
-       
-        
-this.url = this.playList[newVal].url;
-          this.picUrl = this.playList[newVal].picUrl;
-this.$nextTick(() => {
-
-            
-          this.isPlaying = true;
-          this.audio.load();
-          this.audio.play();
-        })
-          
-        
-        
-        
-      },
     },
   },
 
@@ -188,8 +175,6 @@ this.$nextTick(() => {
         this.$store.state.playerAbout.isPlaying = val;
       },
     },
-    
-      
   },
 
   methods: {
@@ -204,17 +189,16 @@ this.$nextTick(() => {
     changeProgress(val) {
       this.setCurrentTime = (val / 100) * this.duration;
     },
-    playState(){
-      if(this.playList.length>1)
-     this. isPlaying = !this.isPlaying
+    playState() {
+if( this.duration===0){return}
+    else  if (this.playList.length > 1) this.isPlaying = !this.isPlaying;
     },
-    goBack(val){
-      if(this.playList.length===1)
-      {return}
-      else
-     this. changePlayingIndex(this.playingIndex +val)
-    }, 
-       handleDelete(row) {
+    goBack(val) {
+      if (this.playList.length === 1) {
+        return;
+      } else this.changePlayingIndex(this.playingIndex + val);
+    },
+    handleDelete(row) {
       this.playList.splice(row, 1);
       if (this.playingIndex > row)
         this.changePlayingIndex(this.playingIndex - 1);
@@ -284,8 +268,7 @@ this.$nextTick(() => {
 .player /deep/ .el-slider__button-wrapper {
   top: -16px;
 }
-.el_col{
-  
+.el_col {
   margin: 0 30px;
 }
 .small {
@@ -351,10 +334,10 @@ i:hover {
   text-align: center;
   font-size: 50px;
 }
-.simplify{
-position: absolute;
-top: 0;
-left:calc(80vw);
+.simplify {
+  position: absolute;
+  top: 0;
+  left: calc(80vw);
 }
 i {
   cursor: pointer;

@@ -1,12 +1,11 @@
 <template>
-  <SongList :isFull='true'/>
+ <router-view></router-view>
 </template>
 
 <script>
-import SongList from '../../components/songList';
 
 export default {
   name: "list",
-  components:{SongList}
+
 };
 </script>

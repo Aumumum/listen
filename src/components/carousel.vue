@@ -1,4 +1,5 @@
 <template>
+<div>  
       <el-carousel indicator-position='none' :interval="5000" :height="imgHeight">
         <el-carousel-item
           class="animate__animated  animate__fadeIn"
@@ -8,7 +9,7 @@
         >
           <img  v-show="true" :src="pic" alt="" />
         </el-carousel-item>
-      </el-carousel>
+      </el-carousel></div>
 </template>
 
 <script>

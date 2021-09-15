@@ -21,16 +21,14 @@
 </template>
 
 <script>
-import { getAlbum } from "../api";
 import { mapActions } from "vuex";
 import { mapMutations } from "vuex";
 import { mapState } from "vuex";
 export default {
   name: "playList",
-  props: ["limit"],
+  props: ['tbData'],
   data() {
     return {
-      tbData: [],
       title: [
         {
           name: "serial",
@@ -85,41 +83,13 @@ export default {
   methods: {
     ...mapActions("playerAbout", ["pushSong"]),
     ...mapMutations("playerAbout", ["changePlayingIndex"]),
-    timeFormt(value) {
-      value = Math.ceil(value / 1000);
-      let m = parseInt(value / 60);
-      let s = value % 60;
-      if (s < 10) s = "0" + s;
-      return m + ":" + s;
-    },
+    
     tableRowClassName() {
       return "hot animate__animated animate__flipInX animate__delay-.5s";
     },
-    loadAll() {
-      getAlbum().then((response) => {
-        let arr = response.data.data;
-        if (this.limit) arr = arr.slice(0, 10);
-        this.tbData = arr.map((item, index) => {
-          return Object.assign({
-            serial: index < 9 ? "0" + (index + 1) : index + 1,
-
-            title: item.alias.length
-              ? item.name + "（" + item.alias + "）"
-              : item.name,
-            pop: item.popularity,
-            singer: item.artists[0].name,
-            album: item.album.name,
-            duration: item.duration,
-            formTime: this.timeFormt(item.duration),
-            id: item.id,
-            picUrl: item.album.picUrl,
-          });
-        });
-      });
-    },
+    
     handleRow(row) {
       let obj = Object.assign(
-        {},
         {
           id: row.id,
           title: row.title,
@@ -129,27 +99,24 @@ export default {
           url: "https://music.163.com/song/media/outer/url?id=" + row.id,
         }
       );
-      this.pushSong(obj);
+      this.pushSong(obj); 
       if (!this.isPlaying) {
         this.$message.success({
           message: "正在加载，即将播放",
-          showClose: false,
         });
         this.changePlayingIndex(this.playingIndex + 1);
       } else if (this.$store.state.playerAbout.playList.includes(obj))
+
         this.$message.warning({
           message: "添加列表成功，下一首播放",
-          showClose: false,
+    
         });
       else
         this.$message.error({
           message: "歌曲已存在",
-          showClose: false,
         });
     },
   },
-  mounted() {
-    this.loadAll();
-  },
+  
 };
 </script>

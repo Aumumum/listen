@@ -3,7 +3,7 @@
   <Carousel/>
   <SongList />
   <h3>新歌速递</h3>
-  <PlayList :limit='10' :style="{minHeight:'550px'}"/>
+  <Newest :limit='10' :style="{minHeight:'550px'}"/>
 
 </div>
 </template>
@@ -11,9 +11,9 @@
 <script>
 import Carousel from '../../components/carousel.vue'
 import SongList  from '../../components/songList.vue'
-import PlayList from '../../components/playList.vue'
+import Newest from './newest.vue'
 export default {
   name: "discovery",
- components:{Carousel,SongList,PlayList}
+ components:{Carousel,SongList,Newest}
 }
 </script><style></style>

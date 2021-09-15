@@ -1,20 +1,18 @@
 <template>
   <div>
-    <el-row
+    <div
       v-if="isFull"
       class="ad animate__animated animate__bounceInDown animate__delay-.7s"
       :style="{ backgroundImage: 'url(' + highquality.coverImgUrl + ')' }"
     >
-      <el-col :span="4">
-        <img :src="highquality.coverImgUrl" lazy alt="精品歌单封面图片" />
-      </el-col>
-      <el-col class="dis" :span="20">
+        <img class="dis" :src="highquality.coverImgUrl" lazy alt="精品歌单封面图片" />
+      <span class="di">
         <span class="top" @click="goPlay(highquality.id)">
           <i class="el-icon-medal-1" style="paddingRight:10px" />精品歌单
         </span>
-        <h1>{{ highquality.name }}</h1>
-        <span>{{ highquality.copywriter }}</span>
-      </el-col>
+<h2>{{ highquality.name }}</h2>
+        <span>{{ highquality.copywriter }}</span></span>
+    
       <div class="tag animate__animated  animate__fadeIn animate__delay-1s">
         <span v-for="(tag, index) in tags" :key="index">
           <span
@@ -26,7 +24,7 @@
           </span>
         </span>
       </div>
-    </el-row>
+    </div>
     <h3 class="animate__animated  animate__fadeIn animate__delay-1s">
       {{ songList.title }}
     </h3>
@@ -62,7 +60,7 @@
 </template>
 
 <script>
-import { getList, getTags, getHighquality, getSongs } from "../api/index";
+import { getList, getTags, getHighquality } from "../api/index";
 export default {
   name: "songList",
   data() {
@@ -134,6 +132,11 @@ export default {
         cat: this.cat,
       }).then((response) => {
         let arr = response.data.playlists;
+        let obj={}
+     arr=arr.reduce(function(a, b) {
+        obj[b.id] ? '' : obj[b.id] = true && a.push(b);
+        return a;
+    }, [])
         this.songList.list = arr.map((item) => {
           return Object.assign({
             id: item.id,
@@ -144,16 +147,14 @@ export default {
       });
     },
     goPlay(id) {
-      getSongs({ id }).then((response) => {
-        this.$store.state.trackIds = response.data.playlist.trackIds;
-        this.$router.push({
-          path: "/newest",
+
+      this.$router.push({
+          path: "/list/detail",
           query: {
-            q: "list",
             id,
           },
         });
-      });
+      
     },
   },
   beforeMount() {
@@ -168,24 +169,32 @@ export default {
 
 <style scoped>
 .ad {
-  position: relative;
+  display: -webkit-flex; /* Safari */
+  display: flex;
+   justify-content:flex-start;
+   align-items:center;
+   padding: 15px 25px;
   background-size: 21000px 21000px;
-  padding-top: 20px;
-  padding-left: 50px;
   border-radius: 0.5em;
   color: #fff;
   font-size: 14px;
 }
-.dis {
-  padding-left: 28px;
-  margin-top: 45px;
+.dis{
+  min-width: 100px;
+  min-height: 100px;
+}
+.di{
+  padding-top: 8px;
+  padding-left: 18px;
+white-space: nowrap;
+  overflow: hidden;
 }
 .top {
   color: #d3b301;
   box-sizing: border-box;
   border: 1px #d3b301 solid;
   padding: 7px 12px;
-  border-radius: 1.5em;
+  border-radius: 2em;
   cursor: pointer;
 }
 .tag {
