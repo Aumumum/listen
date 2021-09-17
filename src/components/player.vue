@@ -48,6 +48,7 @@
               height="350px"
               :show-header="false"
               @row-click="rowDblclick"
+              aria-hidden="true"
             >
               <el-table-column width="220">
                 <template slot-scope="scope">
@@ -139,10 +140,12 @@ export default {
           this.changePlayingIndex(this.playList.length - 1);
           return;
         }
-        this.isPlaying = false;
+        
         this.url = this.playList[newVal].url;
         this.picUrl = this.playList[newVal].picUrl;
         this.$nextTick(() => {
+          
+          this.audio.load();
           this.isPlaying = true;
         });
       },
@@ -151,10 +154,10 @@ export default {
       handler(newVal) {
         this.$nextTick(() => {
           if (newVal) {
-            this.playBtn = "el-icon-video-pause";
             
-          this.audio.load();
-            this.audio.play();
+            this.playBtn = "el-icon-video-pause";
+           this.audio.play()
+            
           } else {
             this.playBtn = "el-icon-video-play";
             this.audio.pause();
@@ -268,6 +271,7 @@ if( this.duration===0){return}
 .player /deep/ .el-slider__button-wrapper {
   top: -16px;
 }
+
 .el_col {
   margin: 0 30px;
 }

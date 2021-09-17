@@ -10,11 +10,48 @@
     @row-dblclick="handleRow"
   >
     <el-table-column
-      v-for="item in disTitle"
-      :key="item.name"
-      :prop="item.name"
-      :label="item.label"
-      :width="item.width"
+    fixed
+      prop="serial"
+      label=""
+      width= 80
+    >
+    </el-table-column>
+
+    <el-table-column
+    fixed
+
+      prop="title"
+      label="音乐标题"            
+      width= 350
+    >
+    </el-table-column>
+
+    <el-table-column
+      prop="pop"
+      label="热度"
+      width= 100
+    >
+    </el-table-column>
+    
+    <el-table-column
+
+      prop="singer"
+      label="歌手"
+      width= 280
+    >
+    </el-table-column>
+    
+    <el-table-column
+      prop="album"
+      label="专辑"
+      width= 300
+    >
+    </el-table-column>
+    
+    <el-table-column
+      prop="formTime"
+      label="时长"
+      width= 80
     >
     </el-table-column>
   </el-table>
@@ -27,58 +64,8 @@ import { mapState } from "vuex";
 export default {
   name: "playList",
   props: ['tbData'],
-  data() {
-    return {
-      title: [
-        {
-          name: "serial",
-          label: "",
-          width: 80,
-        },
-        {
-          name: "title",
-          label: "音乐标题",
-          width: 350,
-        },
-        {
-          name: "pop",
-          label: "热度",
-          width: 100,
-        },
-        {
-          name: "singer",
-          label: "歌手",
-          width: 280,
-        },
-        {
-          name: "album",
-          label: "专辑",
-          width: 300,
-        },
-        {
-          name: "formTime",
-          label: "时长",
-          width: 80,
-        },
-      ],
-      disTitle: [],
-    };
-  },
-  watch: {
-    isMobile: {
-      handler(newVal) {
-        if (newVal) this.disTitle = this.title.slice(0, 2);
-        else this.disTitle = this.title;
-      },
-      immediate: true,
-    },
-  },
   computed: {
     ...mapState("playerAbout", ["isPlaying", "playingIndex"]),
-
-    isMobile() {
-      return this.$store.state.isMobile;
-    },
   },
   methods: {
     ...mapActions("playerAbout", ["pushSong"]),

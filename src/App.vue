@@ -62,9 +62,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #b1b1b1;
 }
-::-webkit-scrollbar-corner {
-  background: #212222;
-}
 .el-container {
   height: 100vh;
   overflow-x: hidden;

@@ -2,17 +2,6 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: "https://music-api-khaki.vercel.app/",
-
-  headers: {'X-Requested-With': 'XMLHttpRequest',
-},
-
-  maxRedirects: 5, // 默认
-  proxy: {
-    protocol: 'https',
-    host: '127.0.0.1',
-    port: 8000,
-    
-  },
 }
 );
 export  function get(url, params = {}) {
@@ -25,7 +14,7 @@ export  function get(url, params = {}) {
       .then((response) => {
         resolve(response);
       })
-     /*  .catch(function (error) {
+       .catch(function (error) {
         if (error.response) {
           // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
           console.log('data',error.response.data);
@@ -40,7 +29,7 @@ export  function get(url, params = {}) {
           // 发送请求时出了点问题
           console.log('#', error.message);
         }
-      }); */
+      }); 
   });
 }
 export function post(url, data = {}) {
