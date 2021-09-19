@@ -1,7 +1,24 @@
 <template>
   <div class="main">
-    <div class="ad">
-      <img :src="detail.coverImgUrl" lazy alt="歌单封面" />
+
+     
+
+       <el-skeleton :loading="loading" animated>
+      
+      <template>
+        <div style="width:100%;">
+           
+        </div>
+      </template>
+      <template>
+
+    <div class="ad animate__animated  animate__fadeIn">
+      
+      
+       
+      
+      <img class="image" :src="detail.coverImgUrl" lazy alt="歌单封面" />
+
       <span class="dis">
         <h2>{{ detail.name }}</h2>
         <el-button icon="el-icon-video-play" type="warning" round
@@ -15,6 +32,10 @@
         <span class="di"><strong>简介：</strong>{{ detail.description }}</span>
       </span>
     </div>
+    
+      </template>
+      </el-skeleton>
+      
     <PlayList :tbData="tbData" />
   </div>
 </template>
@@ -36,6 +57,7 @@ export default {
         description: "",
       },
       tbData: [],
+      loading:true
     };
   },
   components: { PlayList },
@@ -83,10 +105,13 @@ this.$confirm('', '该操作会清空当前播放列表，是否继续？', {
         Object.keys(this.detail).forEach((key) => {
           this.detail[key] = obj[key];
         });
+        this.loading=false
         let ids = [];
         obj.trackIds.forEach((item,index) => {
           ids[index]= item.id
-        });
+        })
+          
+        
 getSongDetail({ids:ids.toString()}).then(response=>{
    let arr = response.data.songs
           this.tbData = arr.map((item, index) => {
@@ -125,7 +150,7 @@ getSongDetail({ids:ids.toString()}).then(response=>{
   display: flex;
   color: #494747;
 }
-img {
+.image {
   width: 180px;
   height: 180px;
   padding: 0 20px;

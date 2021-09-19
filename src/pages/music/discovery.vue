@@ -1,7 +1,7 @@
 <template>
-<div>
+<div> 
   <Carousel/>
-  <SongList />
+  <SongList :style="{maxHeight:'265px'}"/>
   <h3>新歌速递</h3>
   <Newest :limit='10' :style="{minHeight:'550px'}"/>
 
