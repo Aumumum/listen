@@ -9,26 +9,19 @@
         :default-active="this.$route.path"
         :collapse="this.$store.state.isCollapse"
       >
-        <li
-          role="menubar"
-          class="el-menu-item user"
-          @click="
-            login();
-            qrLogin();
-          "
-        >
+        <li role="menubar" class="el-menu-item user" @click="login()">
           <i>
             <img
               class="demo-avatar demo-basic"
               :src="userInfo.avatarUrl"
-              alt="用戶頭像"
+              alt="用户头像"
             />
           </i>
           <span>{{ userInfo.nickname }}</span>
           <el-popover class="setting" placement="bottom-end" trigger="hover">
             <span
               ><i class="el-icon-switch-button"></i
-              ><span style="paddingLeft:10px">退出登錄</span></span
+              ><span style="paddingLeft:10px">退出登陆</span></span
             >
             <i slot="reference" class="el-icon-caret-bottom"></i>
           </el-popover>
@@ -52,27 +45,33 @@
       width="300px"
       :before-close="handleClose"
     >
-    h
-          <el-skeleton :loading="loading" animated>
-            <template slot="template">
-              <div @click="qrLogin">
-                <el-skeleton-item
-                  variant="caption"
-                  style="width: 180px; height: 180px;"
-                />
-              </div>
-            </template>
-            <template>
-              <img width="180" height="180" :src="qrCode" alt="" />
-            </template>
-          </el-skeleton>
-        
+      <div class="qr">
+        <el-skeleton :loading="loading" animated>
+          <template slot="template">
+            <div @click="qrLogin">
+              <el-skeleton-item
+                variant="caption"
+                style="width: 180px; height: 180px;"
+              />
+            </div>
+          </template>
+          <template>
+            <img width="180px" height="180px" :src="qrCode" alt="" />
+          </template>
+        </el-skeleton>
+        <span
+          >使用
+          <a target="view_window" href=" https://music.163.com/#/download"
+            >网易云音乐APP</a
+          >扫码登陆</span
+        >
+      </div>
     </el-dialog>
   </el-aside>
 </template>
 
 <script>
-import { callPhone,refresh, qr } from "../api";
+import { qr } from "../api";
 export default {
   name: "navMeau",
   props: ["isCollapse", "isMobile"],
@@ -104,21 +103,6 @@ export default {
     };
   },
   methods: {
-     a() {
-      callPhone({ phone: "17779600797", password: "wasd1234" }).then(
-        (response) => {
-          let obj = response.data.profile;
-          console.log(response);
-          Object.keys(this.userInfo).forEach((key) => {
-            this.userInfo[key] = obj[key];
-          }).then(()=>{
-             refresh().then((res)=>{
-        console.log(res)
-      })
-          });
-        }
-      );
-    }, 
     qrLogin() {
       let key;
       qr("/key")
@@ -139,11 +123,14 @@ export default {
                   code = response.data.code;
                   if (!this.dialogVisible) clearInterval(timer);
                   else if (code === 803) {
+                    let obj = response.data.profile;
+                    Object.keys(this.userInfo).forEach((key) => {
+                      this.userInfo[key] = obj[key];
+                    });
                     clearInterval(timer);
                     this.$message.success({
                       message: "授权登录成功",
                     });
-
                     this.dialogVisible = false;
                   } else if (code === 800) {
                     clearInterval(timer);
@@ -161,21 +148,14 @@ export default {
         });
     },
     login() {
-      refresh().then((res)=>{
-        console.log(res)
-      })
+      this.qrLogin();
       this.dialogVisible = true;
-     
-      
     },
     handleClose() {
       this.dialogVisible = false;
     },
   },
-  mounted() {
-    this.login();
-    this.a()
-  },
+  
 };
 </script>
 
@@ -198,22 +178,21 @@ export default {
 .user img {
   border-radius: 100%;
 }
+.qr {
+  padding: 40px;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+}
 .el-skeleton__item::before {
   font-size: 20px;
   color: #0000f073;
-  margin: 20px;
-  line-height: 120px;
+  margin: 50px;
+  line-height: 180px;
   cursor: pointer;
   content: "点击刷新";
 }
-.el-col{
-  height: 120px;
-}
-.fx{
-  height: 120px;
-  width: 0;
-  border-right: 1px solid gainsboro;
-}
+
 .setting {
   position: relative;
   top: -56px;

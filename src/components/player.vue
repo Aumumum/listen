@@ -1,6 +1,6 @@
 <template>
   <el-row
-    v-show="this.$route.path !== '/mv'"
+    v-show="isPlaying"
     class="player"
     type="flex"
     justify="space-around"

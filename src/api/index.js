@@ -20,9 +20,16 @@ export const checkAlbum = (params) => get("/check/music",params);
 //登錄
 export const qr=(url,params)=>get("/login/qr"+url,{...params,timestamp:new Date().getTime()})
 
-export const callPhone = (data) => post("/login/cellphone", data);
-export const loginStatus=()=>get("/login/status")
+export const callPhone = (data) => post("/login/cellphone",{ ...data});
 export const logout=()=>get("/logout")
-export const refresh=()=>get("user/account",{timestamp:new Date().getTime()})
+
+
+export const top_mv=()=>get("/top/mv")
+export const simi_mv=(params)=>get("/simi/mv",params)
+
+export const mv_url=(params)=>get("/mv/url",params)
+
+
+
 
 
