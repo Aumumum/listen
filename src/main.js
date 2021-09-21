@@ -5,6 +5,7 @@ import store from "./store";import animate from "animate.css";
 import "./static/normalize.css";
 
 import "./plugins/element";
+import './registerServiceWorker'
 
 Vue.config.productionTip = false;
 
