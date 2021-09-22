@@ -2,6 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: "https://music-api-khaki.vercel.app/",
+  withCredentials: true,
 }
 );
 export  function get(url, params = {}) {

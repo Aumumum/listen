@@ -19,7 +19,7 @@
           </i>
           <span>{{ userInfo.nickname }}</span>
           <el-popover class="setting" placement="bottom-end" trigger="hover">
-            <span
+            <span @click="logout"
               ><i class="el-icon-switch-button"></i
               ><span style="paddingLeft:10px">退出登陆</span></span
             >
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { qr } from "../api";
+import { login, logout } from "../api";
 export default {
   name: "navMeau",
   props: ["isCollapse", "isMobile"],
@@ -103,34 +103,51 @@ export default {
     };
   },
   methods: {
+    logout() {
+      logout().then(() => {
+        this.userInfo = {
+          userId: 0,
+          nickname: "未登錄",
+          avatarUrl:
+            "http://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
+          backgroundUrl: "",
+        };
+      });
+    },
+
+    loginStatus() {
+      login("/status").then((response) => {
+        let obj = response.data.data.profile;
+        Object.keys(this.userInfo).forEach((key) => {
+          this.userInfo[key] = obj[key];
+        });
+      });
+    },
     qrLogin() {
       let key;
-      qr("/key")
+      login("/qr/key")
         .then((response) => {
           key = response.data.data.unikey;
         })
         .then(() => {
-          qr("/create", { key, qrimg: "true" })
+          login("/qr/create", { key, qrimg: "true" })
             .then((response) => {
               this.qrCode = response.data.data.qrimg;
-              console.log(this.qrCode);
             })
             .then(() => {
               let code;
               const timer = setInterval(() => {
-                qr("/check", { key }).then((response) => {
+                login("/qr/check", { key }).then((response) => {
                   this.loading = false;
                   code = response.data.code;
                   if (!this.dialogVisible) clearInterval(timer);
                   else if (code === 803) {
-                    let obj = response.data.profile;
-                    Object.keys(this.userInfo).forEach((key) => {
-                      this.userInfo[key] = obj[key];
-                    });
+                    this.loginStatus();
                     clearInterval(timer);
                     this.$message.success({
                       message: "授权登录成功",
                     });
+
                     this.dialogVisible = false;
                   } else if (code === 800) {
                     clearInterval(timer);
@@ -155,7 +172,9 @@ export default {
       this.dialogVisible = false;
     },
   },
-  
+  mounted() {
+    this.loginStatus();
+  },
 };
 </script>
 

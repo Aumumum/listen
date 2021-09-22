@@ -18,7 +18,7 @@ export const getSongDetail = (params) => get("/song/detail", params);
 export const getAlbum = () => get("/top/song?type=7");
 export const checkAlbum = (params) => get("/check/music",params);
 //登錄
-export const qr=(url,params)=>get("/login/qr"+url,{...params,timestamp:new Date().getTime()})
+export const login=(url,params)=>get("/login"+url,{...params,timestamp:new Date().getTime()})
 
 export const callPhone = (data) => post("/login/cellphone",{ ...data});
 export const logout=()=>get("/logout")
