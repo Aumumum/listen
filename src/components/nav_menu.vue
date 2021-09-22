@@ -9,7 +9,7 @@
         :default-active="this.$route.path"
         :collapse="this.$store.state.isCollapse"
       >
-        <li role="menubar" class="el-menu-item user" @click="login()">
+        <li role="menubar" class="el-menu-item user" @click="login">
           <i>
             <img
               class="demo-avatar demo-basic"
@@ -18,7 +18,13 @@
             />
           </i>
           <span>{{ userInfo.nickname }}</span>
-          <el-popover class="setting" placement="bottom-end" trigger="hover">
+          <el-popover
+            v-show="login_status"
+            class="user_info"
+            width="215"
+            placement="bottom-end"
+            trigger="hover"
+          >
             <span @click="logout"
               ><i class="el-icon-switch-button"></i
               ><span style="paddingLeft:10px">退出登陆</span></span
@@ -41,7 +47,7 @@
 
     <el-dialog
       title="扫码登陆"
-      :visible.sync="dialogVisible"
+      :visible="dialogVisible"
       width="300px"
       :before-close="handleClose"
     >
@@ -76,6 +82,14 @@ export default {
   name: "navMeau",
   props: ["isCollapse", "isMobile"],
   computed: {
+    login_status: {
+      get() {
+        return this.$store.state.login_status;
+      },
+      set(val) {
+        this.$store.state.login_status = val;
+      },
+    },
     items() {
       return [
         {
@@ -117,10 +131,13 @@ export default {
 
     loginStatus() {
       login("/status").then((response) => {
-        let obj = response.data.data.profile;
-        Object.keys(this.userInfo).forEach((key) => {
-          this.userInfo[key] = obj[key];
-        });
+        if (response.data.data.account) {
+          this.login_status = true;
+          let obj = response.data.data.profile;
+          Object.keys(this.userInfo).forEach((key) => {
+            this.userInfo[key] = obj[key];
+          });
+        } else this.login_status = false;
       });
     },
     qrLogin() {
@@ -160,19 +177,26 @@ export default {
                     this.qrCode = "";
                   }
                 });
-              }, 1000);
+              }, 100);
             });
         });
     },
     login() {
-      this.qrLogin();
-      this.dialogVisible = true;
+      
+      if (this.login_status) 
+      {
+      return
+}
+     else{
+        this.qrLogin();
+        this.dialogVisible=true
+      }
     },
     handleClose() {
       this.dialogVisible = false;
     },
   },
-  mounted() {
+  beforeMount() {
     this.loginStatus();
   },
 };
@@ -212,7 +236,7 @@ export default {
   content: "点击刷新";
 }
 
-.setting {
+.user_info {
   position: relative;
   top: -56px;
   left: 180px;

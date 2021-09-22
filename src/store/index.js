@@ -33,7 +33,6 @@ const playerAbout = {
     pushAll(state, obj) {
       state.playList.splice(1,state.playList.length-1,...obj);
       state.playingIndex=1
-      console.log( state.playList.length)
     },
     changePlayingIndex(state,val){
       state.playingIndex=val
@@ -57,5 +56,9 @@ export default new Vuex.Store({
   state:{
     isCollapse: false,
     isMobile: false,
-    nanoid:nanoid()},
+    nanoid:nanoid(),
+    
+    login_status:false
+    },
+    
 });

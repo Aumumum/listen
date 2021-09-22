@@ -130,7 +130,6 @@ getSongDetail({ids:ids.toString()}).then(response=>{
         }); 
         
        })
-    console.log(this.tbData)
 })
       });
     },

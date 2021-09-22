@@ -1,6 +1,6 @@
 <template>
   <el-row
-    v-show="isPlaying"
+    
     class="player"
     type="flex"
     justify="space-around"
@@ -134,7 +134,10 @@ export default {
     playingIndex: {
       handler(newVal) {
         if (newVal === this.playList.length) {
+          setTimeout(() => {
+            
           this.changePlayingIndex(1);
+          }, 5000);
           return;
         } else if (newVal < 1) {
           this.changePlayingIndex(this.playList.length - 1);

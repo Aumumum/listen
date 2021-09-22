@@ -19,14 +19,15 @@ export const getAlbum = () => get("/top/song?type=7");
 export const checkAlbum = (params) => get("/check/music",params);
 //登錄
 export const login=(url,params)=>get("/login"+url,{...params,timestamp:new Date().getTime()})
-
 export const callPhone = (data) => post("/login/cellphone",{ ...data});
 export const logout=()=>get("/logout")
+
+export const personal_fm=()=>get("/personal_fm",{timestamp:new Date().getTime()})
+export const intelligence=(params)=>get("/playmode/intelligence/list",params)
 
 
 export const top_mv=()=>get("/top/mv")
 export const simi_mv=(params)=>get("/simi/mv",params)
-
 export const mv_url=(params)=>get("/mv/url",params)
 
 
