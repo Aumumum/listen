@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div style="width:100%">
+<div style="width:100%">222</div>
+<div v-if="blank" class="blank"></div>
+  </div>
 </template>
 
 <script>
@@ -9,8 +12,14 @@ import { mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
-      
-      song: [],
+      blank:true,
+      song: [{id:0,
+      title:'',
+singer:'',
+duration:0,
+ picUrl:'',
+url:'',
+      }],
       };
 
   },
@@ -20,15 +29,14 @@ export default {
         if(newVal===this.song.length){
           console.log(1);
   this.get_fm();
+  if(!oldVal)
   setTimeout(()=>{
-  console.log(this.song);
-
-  },1000)
+  this.pushAll(this.song);
+  },2000)
   }
 else if(oldVal%this.playList.length===0)  {
 console.log(2);
-          this.pushAll(this.song);}
-        
+          this.pushAll(this.song);}       
       },immediate:true
       
     },
@@ -73,10 +81,20 @@ console.log(2);
       this.$message.warning({
         message: "私人FM需要登陆，并且打开个性化服务",
       });
-      this.$router.go(-1);
     }
-    },5000)
+    else this.blank=false
+    },1500)
 
   },
 };
 </script>
+<style scoped>
+  .blank{
+    position:fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: white;;
+  }
+  
+</style>

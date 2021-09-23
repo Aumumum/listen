@@ -1,6 +1,5 @@
 <template>
   <el-row
-    
     class="player"
     type="flex"
     justify="space-around"
@@ -130,24 +129,20 @@ export default {
     volume(newVal) {
       this.audio.volume = newVal / 100;
     },
-    
+
     playingIndex: {
       handler(newVal) {
         if (newVal === this.playList.length) {
-          setTimeout(() => {
-            
           this.changePlayingIndex(1);
-          }, 5000);
           return;
         } else if (newVal < 1) {
           this.changePlayingIndex(this.playList.length - 1);
           return;
         }
-        
+
         this.url = this.playList[newVal].url;
         this.picUrl = this.playList[newVal].picUrl;
         this.$nextTick(() => {
-          
           this.audio.load();
           this.isPlaying = true;
         });
@@ -157,10 +152,8 @@ export default {
       handler(newVal) {
         this.$nextTick(() => {
           if (newVal) {
-            
             this.playBtn = "el-icon-video-pause";
-           this.audio.play()
-            
+            this.audio.play();
           } else {
             this.playBtn = "el-icon-video-play";
             this.audio.pause();
@@ -196,8 +189,9 @@ export default {
       this.setCurrentTime = (val / 100) * this.duration;
     },
     playState() {
-if( this.duration===0){return}
-    else  if (this.playList.length > 1) this.isPlaying = !this.isPlaying;
+      if (this.duration === 0) {
+        return;
+      } else if (this.playList.length > 1) this.isPlaying = !this.isPlaying;
     },
     goBack(val) {
       if (this.playList.length === 1) {

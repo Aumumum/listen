@@ -33,7 +33,6 @@ export default {
       immediate: true,
     },
   },
-
   mounted() {
     window.onresize = () => {
       this.screenWidth = document.body.clientWidth;

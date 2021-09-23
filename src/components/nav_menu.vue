@@ -177,7 +177,7 @@ export default {
                     this.qrCode = "";
                   }
                 });
-              }, 100);
+              }, 1000);
             });
         });
     },
