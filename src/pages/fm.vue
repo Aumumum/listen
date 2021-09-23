@@ -26,16 +26,16 @@ url:'',
   watch: {
     playingIndex: {
       handler(newVal,oldVal) {
-        if(newVal===this.song.length){
-          console.log(1);
-  this.get_fm();
-  if(!oldVal)
+
+        if(!oldVal){
   setTimeout(()=>{
   this.pushAll(this.song);
-  },2000)
+  },2000)}
+        if(newVal===this.song.length){
+  this.get_fm();
+  
   }
 else if(oldVal%this.playList.length===0)  {
-console.log(2);
           this.pushAll(this.song);}       
       },immediate:true
       
@@ -74,6 +74,10 @@ console.log(2);
         
       });
     },
+  },
+  beforeMount(){
+  this.get_fm();
+
   },
   mounted() {
     setTimeout(()=>{

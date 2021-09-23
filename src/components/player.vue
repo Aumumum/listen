@@ -106,7 +106,7 @@ export default {
   data() {
     return {
       playBtn: "el-icon-video-play",
-      url: "",
+      url: "http://#",
       picUrl: "",
       audio: null,
       volume: 20,
