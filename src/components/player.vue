@@ -1,5 +1,6 @@
 <template>
   <el-row
+  v-show="this.$route.path!=='/mv' && isPlaying"
     class="player"
     type="flex"
     justify="space-around"
@@ -107,7 +108,7 @@ export default {
     return {
       playBtn: "el-icon-video-play",
       url: "http://#",
-      picUrl: "",
+      picUrl: "#",
       audio: null,
       volume: 20,
       progress: 0,

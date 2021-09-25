@@ -113,6 +113,8 @@ export default {
       },
       dialogVisible: false,
       loading: true,
+      code:800,
+      timeout:0,
       qrCode: "",
     };
   },
@@ -127,6 +129,7 @@ export default {
           backgroundUrl: "",
         };
       });
+      this.loginStatus() 
     },
 
     loginStatus() {
@@ -142,7 +145,13 @@ export default {
     },
     qrLogin() {
       let key;
-      login("/qr/key")
+      let timer
+      clearInterval(timer)
+      if(this.code===800)
+      {
+        
+        this.qrCode=''
+        login("/qr/key")
         .then((response) => {
           key = response.data.data.unikey;
         })
@@ -152,13 +161,12 @@ export default {
               this.qrCode = response.data.data.qrimg;
             })
             .then(() => {
-              let code;
-              const timer = setInterval(() => {
+                timer = setInterval(() => {
                 login("/qr/check", { key }).then((response) => {
                   this.loading = false;
-                  code = response.data.code;
-                  if (!this.dialogVisible) clearInterval(timer);
-                  else if (code === 803) {
+                  this.code = response.data.code;
+                  console.log(this.code)
+                 if (this.code === 803) {
                     this.loginStatus();
                     clearInterval(timer);
                     this.$message.success({
@@ -166,20 +174,12 @@ export default {
                     });
 
                     this.dialogVisible = false;
-                  } else if (code === 800) {
-                    clearInterval(timer);
-                    if (this.dialogVisible) {
-                      this.$message.warning({
-                        message: "二维码过期",
-                      });
-                    }
-                    this.loading = true;
-                    this.qrCode = "";
-                  }
+                  } 
                 });
-              }, 1000);
+              }, this.timeout);
             });
         });
+      }
     },
     login() {
       
@@ -188,16 +188,20 @@ export default {
       return
 }
      else{
+       this.timeout=1000
         this.qrLogin();
         this.dialogVisible=true
       }
     },
     handleClose() {
       this.dialogVisible = false;
+      this.timeout=60000
     },
   },
   beforeMount() {
     this.loginStatus();
+    this.timeout=60000
+    this. qrLogin()
   },
 };
 </script>
@@ -205,6 +209,9 @@ export default {
 <style scoped>
 .el-menu {
   height: 100%;
+  
+  overflow-x: hidden;
+
 }
 .el-menu span {
   font-size: 17px;

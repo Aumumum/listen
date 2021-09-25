@@ -45,6 +45,8 @@ export default {
 body {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    
+  overflow-x: hidden;
 }
 ::-webkit-scrollbar {
   width: 8px;
@@ -63,7 +65,6 @@ body {
 }
 .el-container {
   height: 100vh;
-  overflow-x: hidden;
 }
 .main{
  padding-bottom: 55px;
