@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="isFull"
-      class="ad animate__animated animate__bounceInDown animate__delay-.7s"
+      class="ad animate__animated animate__bounceInDown "
       :style="{ backgroundImage: 'url(' + highquality.coverImgUrl + ')' }"
     >
       <el-skeleton :rows="6" :loading="loading" animated>
@@ -31,7 +31,7 @@
         <span>{{ highquality.copywriter }}</span></span
       >
 
-      <div class="tag animate__animated  animate__fadeIn animate__delay-1s">
+      <div class="tag animate__animated  animate__fadeIn ">
         <span v-for="(tag, index) in tags" :key="index">
           <span
             class="item "
@@ -113,15 +113,11 @@ export default {
     },
   },
   watch: {
-    "songList.title": {
-      handler() {
-        this.loadALl();
-      },
-      immediate: true,
-    },
+    
     stateChange: {
       handler() {
         this.listChange();
+        console.log(888)
       },
     },
     immediate: true,
@@ -139,8 +135,9 @@ export default {
       this.songList.pagination = val;
     },
 
-    loadALl() {
-      getHighquality({
+   
+    listChange() {
+       getHighquality({
         limit: 1,
         cat: this.cat,
       }).then((response) => {
@@ -150,8 +147,6 @@ export default {
         });
         this.loading=false
       });
-    },
-    listChange() {
       getList({
         limit: this.isFull ? this.songList.limit : 6,
         offset: this.offset,
@@ -182,9 +177,9 @@ export default {
     },
   },
   beforeMount() {
-    this.$nextTick(() => {
+
       this.listChange();
-    });
+   
 
     getTags().then((response) => {
       this.tags = response.data.tags.slice(0, 9);

@@ -54,7 +54,7 @@
       <div class="qr">
         <el-skeleton :loading="loading" animated>
           <template slot="template">
-            <div @click="qrLogin">
+            <div >
               <el-skeleton-item
                 variant="caption"
                 style="width: 180px; height: 180px;"
@@ -112,11 +112,47 @@ export default {
         backgroundUrl: "",
       },
       dialogVisible: false,
-      loading: true,
-      code:800,
-      timeout:0,
+      loading: false,
+      key:0,
+      code: 800,
+      timeout: 0,
       qrCode: "",
     };
+  },
+  watch:{
+    code:{
+      handler(newVal){
+        console.log(newVal)
+        if(newVal===800){
+          this. qrLogin()
+        }
+        else if(newVal===801){
+          this.timeout=180000
+         
+          
+        }
+
+else if (newVal=== 803) {
+                      this.loginStatus();
+                      this.$message.success({
+                        message: "授权登录成功",
+                      });
+                      this.dialogVisible = false;
+                    }
+
+
+      },immediate:true
+    },
+    timeout:{
+      handler(newVal){
+        
+        setTimeout(()=>{
+          console.log(newVal);
+          this.timeout=Math.floor(newVal/2)
+          this.check()
+        },newVal)
+      }
+    }
   },
   methods: {
     logout() {
@@ -129,7 +165,7 @@ export default {
           backgroundUrl: "",
         };
       });
-      this.loginStatus() 
+      this.login_status = false;
     },
 
     loginStatus() {
@@ -145,63 +181,57 @@ export default {
     },
     qrLogin() {
       let key;
-      let timer
-      clearInterval(timer)
-      if(this.code===800)
-      {
-        
-        this.qrCode=''
-        login("/qr/key")
-        .then((response) => {
-          key = response.data.data.unikey;
-        })
-        .then(() => {
-          login("/qr/create", { key, qrimg: "true" })
-            .then((response) => {
-              this.qrCode = response.data.data.qrimg;
-            })
-            .then(() => {
-                timer = setInterval(() => {
-                login("/qr/check", { key }).then((response) => {
-                  this.loading = false;
-                  this.code = response.data.code;
-                  console.log(this.code)
-                 if (this.code === 803) {
-                    this.loginStatus();
-                    clearInterval(timer);
-                    this.$message.success({
-                      message: "授权登录成功",
-                    });
+      
+                    this.loading = true;
 
-                    this.dialogVisible = false;
-                  } 
-                });
-              }, this.timeout);
-            });
-        });
-      }
+        this.qrCode = "";
+        login("/qr/key")
+          .then((response) => {
+            this.key = response.data.data.unikey;
+          })
+          .then(() => {
+            login("/qr/create", { key, qrimg: "true" })
+              .then((response) => {
+                this.qrCode = response.data.data.qrimg;
+              })
+              .then(() => {
+                this.check()
+                  
+              });
+          });
+      
+    },
+
+    check(){
+login("/qr/check", { key:this.key }).then((response) => {
+                    this.loading = false;
+                    this.code = response.data.code;
+                    
+                  });
+                
     },
     login() {
-      
-      if (this.login_status) 
-      {
-      return
-}
-     else{
-       this.timeout=1000
+      if (this.login_status) {
+        return;
+      } else {
         this.qrLogin();
-        this.dialogVisible=true
+        this.dialogVisible = true;
       }
     },
     handleClose() {
       this.dialogVisible = false;
-      this.timeout=60000
     },
   },
-  beforeMount() {
-    this.loginStatus();
-    this.timeout=60000
-    this. qrLogin()
+  beforeCreate() {
+    login("/status").then((response) => {
+        if (response.data.data.account) {
+          this.login_status = true;
+          let obj = response.data.data.profile;
+          Object.keys(this.userInfo).forEach((key) => {
+            this.userInfo[key] = obj[key];
+          });
+        } else this.login_status = false;
+      });
   },
 };
 </script>
@@ -209,9 +239,8 @@ export default {
 <style scoped>
 .el-menu {
   height: 100%;
-  
-  overflow-x: hidden;
 
+  overflow-x: hidden;
 }
 .el-menu span {
   font-size: 17px;
@@ -235,12 +264,9 @@ export default {
   text-align: center;
 }
 .el-skeleton__item::before {
-  font-size: 20px;
-  color: #0000f073;
   margin: 50px;
   line-height: 180px;
   cursor: pointer;
-  content: "点击刷新";
 }
 
 .user_info {

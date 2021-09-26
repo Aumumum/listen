@@ -1,7 +1,7 @@
 <template>
   <div style="width:100%">
-<div style="width:100%">222</div>
-<div v-if="blank" class="blank"></div>
+    <div style="width:100%">222</div>
+    <div v-if="blank" class="blank">私人FM需要登陆，并且打开个性化服务</div>
   </div>
 </template>
 
@@ -12,37 +12,44 @@ import { mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
-      blank:true,
-      song: [{id:0,
-      title:'',
-singer:'',
-duration:0,
- picUrl:'',
-url:'',
-      }],
-      };
-
+      blank: true,
+      song: [
+         { id: 0, title: " ", singer: "", duration: 0, picUrl: "", url: "" }, 
+      ],
+    };
   },
   watch: {
-    playingIndex: {
-      handler(newVal,oldVal) {
-
-        if(!oldVal){
-  setTimeout(()=>{
-  this.pushAll(this.song);
-  },2000)}
-        if(newVal===this.song.length){
-  this.get_fm();
-  
-  }
-else if(oldVal%this.playList.length===0)  {
-          this.pushAll(this.song);}       
+    login_status: {
+      handler(newVal) {
+        if (newVal) {
+          this.blank = false;
+         this.get_fm() 
+          setTimeout(() => {
+            console.log(this.song)
+            this.pushAll(this.song);
+          }, 2000);
+        }
+        else {
+          this.blank=true
+          this.song=[]
+        }
       },immediate:true
-      
+    },
+    playingIndex: {
+      handler(newVal, oldVal) {
+        if (newVal === this.song.length) {
+          this.get_fm();
+        } else if (oldVal % this.playList.length === 0) {
+          this.pushAll(this.song);
+        }
+      },
     },
   },
   computed: {
     ...mapState("playerAbout", ["playList", "playingIndex"]),
+    login_status() {
+      return this.$store.state.login_status;
+    },
     isPlaying: {
       get() {
         return this.$store.state.playerAbout.isPlaying;
@@ -57,11 +64,10 @@ else if(oldVal%this.playList.length===0)  {
 
     get_fm() {
       personal_fm().then((response) => {
-        this.song = [];
         let obj = response.data.data;
-        this.song = obj.map((item) => {this.timeout+=item.duration
+        this.song = obj.map((item) => {
+          this.timeout += item.duration;
           return Object.assign({
-
             id: item.id,
             title: item.name,
             singer: item.artists[0].name,
@@ -70,35 +76,22 @@ else if(oldVal%this.playList.length===0)  {
             url: "https://music.163.com/song/media/outer/url?id=" + item.id,
           });
         });
-       
-        
       });
     },
-  },
-  beforeMount(){
-  this.get_fm();
-
-  },
-  mounted() {
-    setTimeout(()=>{
-       if (!this.$store.state.login_status) {
-      this.$message.warning({
-        message: "私人FM需要登陆，并且打开个性化服务",
-      });
-    }
-    else this.blank=false
-    },1500)
-
   },
 };
 </script>
 <style scoped>
-  .blank{
-    position:fixed;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: white;;
-  }
-  
+.blank {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  text-align: center;
+  line-height: 100vh;
+  font-size: 20px;
+  font-weight: bolder;
+  letter-spacing: 5px;
+}
 </style>
