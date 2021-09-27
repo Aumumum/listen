@@ -117,7 +117,6 @@ export default {
     stateChange: {
       handler() {
         this.listChange();
-        console.log(888)
       },
     },
     immediate: true,

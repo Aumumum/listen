@@ -51,13 +51,39 @@ export default {
       },
     },
   },
+  watch: {
+    $route: {
+      handler(to) {
+        if (to.query.url) {
+          this.video_isPlaying = true;
+          this.mv.url = to.query.url;
+          this.$nextTick(() => {
+            this.video.controls = true;
+this.video.play()
+          });
+          
+        }else {
+          this.video_isPlaying =false
+          this.mv.url=''
+        }
+      },
+      immediate: true,
+    },
+  },
   methods: {
     goPlay(obj) {
       this.mv = obj;
       this.video_isPlaying = true;
       this.$nextTick(() => {
         this.video.controls = true;
-        this.video.play();
+        this.video.play()
+      });
+
+      this.$router.push({
+        path: "/mv",
+        query: {
+          url: this.mv.url,
+        },
       });
     },
     getUrl() {
@@ -78,6 +104,7 @@ export default {
     },
     video_monitor() {
       this.video = this.$refs.video;
+      
       this.video.addEventListener("ended", () => {
         this.video.controls = false;
         simi_mv({ mvid: this.mv.id })

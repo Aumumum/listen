@@ -54,7 +54,7 @@
       <div class="qr">
         <el-skeleton :loading="loading" animated>
           <template slot="template">
-            <div >
+            <div>
               <el-skeleton-item
                 variant="caption"
                 style="width: 180px; height: 180px;"
@@ -112,47 +112,42 @@ export default {
         backgroundUrl: "",
       },
       dialogVisible: false,
-      loading: false,
-      key:0,
+      loading: true,
+      key: 0,
       code: 800,
-      timeout: 0,
+       timer:null,
       qrCode: "",
     };
   },
-  watch:{
-    code:{
-      handler(newVal){
-        console.log(newVal)
-        if(newVal===800){
-          this. qrLogin()
-        }
-        else if(newVal===801){
-          this.timeout=180000
-         
-          
-        }
-
-else if (newVal=== 803) {
-                      this.loginStatus();
-                      this.$message.success({
-                        message: "授权登录成功",
-                      });
-                      this.dialogVisible = false;
-                    }
-
-
-      },immediate:true
-    },
-    timeout:{
-      handler(newVal){
-        
-        setTimeout(()=>{
-          console.log(newVal);
-          this.timeout=Math.floor(newVal/2)
-          this.check()
-        },newVal)
+  watch: {
+    dialogVisible(newVal){
+      if(!newVal){
+        console.log(this.timer)
+        clearTimeout(this.timer)
       }
-    }
+      
+    },
+    code: {
+      handler(newVal) {
+        console.log(newVal);
+        if (newVal === 800) {
+          clearTimeout(this.timer);
+          this.qrCode = "";
+          this.loading = true;
+          this.qrLogin();
+        } else if (newVal === 801) {
+          this.loading = false;
+        } else if (newVal === 803) {
+          this.loginStatus();
+          this.$message.success({
+            message: "授权登录成功",
+          });
+          this.dialogVisible = false;
+        }
+      },
+      immediate: true,
+    },
+   
   },
   methods: {
     logout() {
@@ -181,34 +176,30 @@ else if (newVal=== 803) {
     },
     qrLogin() {
       let key;
-      
-                    this.loading = true;
-
-        this.qrCode = "";
-        login("/qr/key")
-          .then((response) => {
-            this.key = response.data.data.unikey;
-          })
-          .then(() => {
-            login("/qr/create", { key, qrimg: "true" })
-              .then((response) => {
-                this.qrCode = response.data.data.qrimg;
-              })
-              .then(() => {
-                this.check()
-                  
-              });
-          });
-      
+this.code=800
+      login("/qr/key")
+        .then((response) => {
+          this.key = response.data.data.unikey;
+        })
+        .then(() => {
+          login("/qr/create", { key, qrimg: "true" })
+            .then((response) => {
+              this.qrCode = response.data.data.qrimg;
+            })
+            .then(() => {
+              if(this.dialogVisible)
+              this.timer=setInterval(()=>{
+                 this.check();
+              },1000)             
+            });
+        });
     },
 
-    check(){
-login("/qr/check", { key:this.key }).then((response) => {
-                    this.loading = false;
-                    this.code = response.data.code;
-                    
-                  });
-                
+    check() {
+      login("/qr/check", { key: this.key }).then((response) => {
+        this.loading = false;
+        this.code = response.data.code;
+      });
     },
     login() {
       if (this.login_status) {
@@ -224,14 +215,14 @@ login("/qr/check", { key:this.key }).then((response) => {
   },
   beforeCreate() {
     login("/status").then((response) => {
-        if (response.data.data.account) {
-          this.login_status = true;
-          let obj = response.data.data.profile;
-          Object.keys(this.userInfo).forEach((key) => {
-            this.userInfo[key] = obj[key];
-          });
-        } else this.login_status = false;
-      });
+      if (response.data.data.account) {
+        this.login_status = true;
+        let obj = response.data.data.profile;
+        Object.keys(this.userInfo).forEach((key) => {
+          this.userInfo[key] = obj[key];
+        });
+      } else this.login_status = false;
+    });
   },
 };
 </script>

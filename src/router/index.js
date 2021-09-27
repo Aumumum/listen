@@ -48,7 +48,12 @@ export default new VueRouter({
     },
     {
       path: "/mv",
-      component: Mv,
+            
+            component:Mv
+            
+            ,
+            
+            
     },
     {
       path: "/*",
