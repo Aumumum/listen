@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%">
-    <div style="width:100%">222</div>
+    <Lyric/>
     <div v-if="blank" class="blank">私人FM需要登陆，并且打开个性化服务</div>
   </div>
 </template>
@@ -8,8 +8,9 @@
 <script>
 import { personal_fm } from "../api";
 import { mapMutations, mapState } from "vuex";
-
+import Lyric from '../components/lyric.vue'
 export default {
+  components:{Lyric},
   data() {
     return {
       blank: true,
@@ -25,8 +26,9 @@ export default {
           this.blank = false;
          this.get_fm() 
           setTimeout(() => {
-            console.log(this.song)
             this.pushAll(this.song);
+            
+            
           }, 2000);
         }
         else {
@@ -37,10 +39,12 @@ export default {
     },
     playingIndex: {
       handler(newVal, oldVal) {
+        
         if (newVal === this.song.length) {
           this.get_fm();
         } else if (oldVal % this.playList.length === 0) {
-          this.pushAll(this.song);
+          this.pushAll(this.song)
+        this.isPlaying=false
         }
       },
     },

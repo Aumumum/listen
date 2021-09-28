@@ -30,6 +30,8 @@ export const top_mv=()=>get("/top/mv")
 export const simi_mv=(params)=>get("/simi/mv",params)
 export const mv_url=(params)=>get("/mv/url",params)
 
+export const lyric=(params)=>get("/lyric",params)
+
 
 
 

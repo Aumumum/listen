@@ -1,6 +1,6 @@
 <template>
   <el-row
-  v-show="this.$route.path!=='/mv' && isPlaying"
+  v-show="this.$route.path!=='/mv' && this.playList.length>1"
     class="player"
     type="flex"
     justify="space-around"
@@ -112,7 +112,7 @@ export default {
       audio: null,
       volume: 20,
       progress: 0,
-      currentTime: 0,
+      
       duration: 0,
       setCurrentTime: 0,
       currentTimeForm: "0:00",
@@ -166,13 +166,21 @@ export default {
   },
 
   computed: {
-    ...mapState("playerAbout", ["playList", "playingIndex"]),
+    ...mapState("playerAbout", ["playList", "playingIndex",'currentTime']),
     isPlaying: {
       get() {
         return this.$store.state.playerAbout.isPlaying;
       },
       set(val) {
         this.$store.state.playerAbout.isPlaying = val;
+      },
+    },
+    currentTime: {
+      get() {
+        return this.$store.state.playerAbout.currentTime;
+      },
+      set(val) {
+        this.$store.state.playerAbout.currentTime = val;
       },
     },
   },
@@ -213,6 +221,9 @@ export default {
     },
     makerAudio() {
       this.audio = this.$refs.audio;
+      this.audio.pause()
+      this.audio.play()
+
       this.audio.addEventListener("canplay", () => {
         this.duration = this.audio.duration;
         this.durationTimeForm = this.timeFormt(this.duration);

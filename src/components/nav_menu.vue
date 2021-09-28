@@ -113,41 +113,14 @@ export default {
       },
       dialogVisible: false,
       loading: true,
-      key: 0,
-      code: 800,
-       timer:null,
+      timer: null,
       qrCode: "",
     };
   },
   watch: {
-    dialogVisible(newVal){
-      if(!newVal){
-        console.log(this.timer)
-        clearTimeout(this.timer)
-      }
-      
+    dialogVisible(newVal) {
+      if (!newVal) clearInterval(this.timer);
     },
-    code: {
-      handler(newVal) {
-        console.log(newVal);
-        if (newVal === 800) {
-          clearTimeout(this.timer);
-          this.qrCode = "";
-          this.loading = true;
-          this.qrLogin();
-        } else if (newVal === 801) {
-          this.loading = false;
-        } else if (newVal === 803) {
-          this.loginStatus();
-          this.$message.success({
-            message: "授权登录成功",
-          });
-          this.dialogVisible = false;
-        }
-      },
-      immediate: true,
-    },
-   
   },
   methods: {
     logout() {
@@ -176,31 +149,26 @@ export default {
     },
     qrLogin() {
       let key;
-this.code=800
       login("/qr/key")
         .then((response) => {
-          this.key = response.data.data.unikey;
+          key = response.data.data.unikey;
         })
         .then(() => {
           login("/qr/create", { key, qrimg: "true" })
             .then((response) => {
               this.qrCode = response.data.data.qrimg;
+              this.loading = false;
             })
             .then(() => {
-              if(this.dialogVisible)
-              this.timer=setInterval(()=>{
-                 this.check();
-              },1000)             
+              this.timer = setInterval(() => {
+                login("/qr/check", { key }).then((response) => {
+                  this.code = response.data.code;
+                });
+              }, 1000);
             });
         });
     },
 
-    check() {
-      login("/qr/check", { key: this.key }).then((response) => {
-        this.loading = false;
-        this.code = response.data.code;
-      });
-    },
     login() {
       if (this.login_status) {
         return;
@@ -214,6 +182,8 @@ this.code=800
     },
   },
   beforeCreate() {
+    
+
     login("/status").then((response) => {
       if (response.data.data.account) {
         this.login_status = true;

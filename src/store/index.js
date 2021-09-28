@@ -21,6 +21,7 @@ const playerAbout = {
   state: () => ({
     playingIndex:0,
     isPlaying:false,
+    currentTime:0,
     playList: [
        {
           }, 

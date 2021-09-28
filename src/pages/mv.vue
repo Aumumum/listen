@@ -5,6 +5,7 @@
       style="width:100%;height:100%;object-fit: fill"
       :poster="mv.cover"
       :src="mv.url"
+      muted
     ></video>
     <div v-show="!video_isPlaying" class="mvs">
       <el-row>
@@ -59,11 +60,18 @@ export default {
           this.mv.url = to.query.url;
           this.$nextTick(() => {
             this.video.controls = true;
+            
 this.video.play()
+
           });
           
         }else {
           this.video_isPlaying =false
+          this.$nextTick(()=>{
+            this.video.controls = false;
+
+          })
+
           this.mv.url=''
         }
       },
@@ -76,6 +84,8 @@ this.video.play()
       this.video_isPlaying = true;
       this.$nextTick(() => {
         this.video.controls = true;
+            this.video.muted = false;
+
         this.video.play()
       });
 
@@ -137,7 +147,7 @@ this.video.play()
 .mvs {
   position: absolute;
   top: 0;
-  background: grey;
+  
   opacity: 0.9;
   height: 100%;
   overflow-y: scroll;
@@ -153,7 +163,6 @@ this.video.play()
 .info {
   position: absolute;
   color: #fff;
-  background: black;
   left: 0;
   top: 0;
   padding-left: 15px;
@@ -163,6 +172,6 @@ this.video.play()
   opacity: 0;
 }
 .info:hover {
-  opacity: 0.9;
+  opacity: 1;
 }
 </style>
